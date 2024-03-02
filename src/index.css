@@ -93,6 +93,8 @@
 
 .workspace-section {
   width: 100%;
+  height: 100dvh;
+  overflow-y: auto;
   scroll-behavior: smooth;
 }
 
@@ -118,7 +120,17 @@
   }
 }
 
+.scroll-place-details::-webkit-scrollbar{
+  height: 3px;
+}
 
+.scroll-only{
+  height: calc(100vh - 22vh);
+  overflow-y: scroll;
+}
+.scroll-only::-webkit-scrollbar{
+  width: 3px;
+}
 @media screen and (max-width: 1024px) {
   .grid-container {
     grid-template-columns: 1fr; /* 25% for the first column, 1fr for the second column */

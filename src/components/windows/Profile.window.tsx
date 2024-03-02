@@ -20,11 +20,9 @@ const ProfileWindow = ({component}:ProfileWindowProps) => {
        <ProfileComponent>
             <Navbar/>
             <div className="p-3 md:p-5 h-screen">
-              <h1 className="text-3xl font-bold">My Profile</h1>
-              
+              <h1 className="text-3xl font-bold">My Profile</h1> 
             {component}
             </div>
-            
         </ProfileComponent>
        </section>
        {state.isNavbarOpen && <MobileMenu/>}

@@ -4,10 +4,13 @@ import WorkSpace from '../Workspace.component'
 
 import MobileMenu from '../common/Mobile.Navbar'
 import { useNavbar } from '@/context/ResponsiveNabBar'
-import PlacesComponent from '../places/place.component'
 
 
-const PlacesWindow = () => {
+type PlacesWindowProps = {
+  children: JSX.Element
+}
+
+const PlacesWindow = ({children}: PlacesWindowProps) => {
   const {state} = useNavbar()
   return (
     <main className='h-screen grid-container'>
@@ -17,7 +20,7 @@ const PlacesWindow = () => {
         <section className='workspace-section'>
             <Navbar/>
             <WorkSpace>
-              <PlacesComponent/>
+              {children}
             </WorkSpace>
         </section>
         {state.isNavbarOpen && <MobileMenu/>}

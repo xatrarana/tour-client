@@ -13,17 +13,11 @@ const DashboardWindow = () => {
         <section className='sidebar-section'>
             <Drawer/>
         </section>
-        <section className='workspace-section'>
+        <section className='workspace-section '>
             <Navbar/>
             <WorkSpace>
                 <UserGreeting/>
                 <FeaturedWindow/>
-                <DetailsWindow/>
-                <DetailsWindow/>
-                <DetailsWindow/>
-                <DetailsWindow/>
-                <DetailsWindow/>
-                <DetailsWindow/>
                 <DetailsWindow/>
             </WorkSpace>
         </section>

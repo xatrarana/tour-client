@@ -1,23 +1,26 @@
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
 import { Button } from '../ui/button'
-import { PlusCircle } from "lucide-react"
-import PlaceCreateForm from './place.form'
 
+type PlaceButtonProps = {
+  icon: JSX.Element,
+  title: string,
+  action?: JSX.Element
+}
 
-const CreatePlace = () => {
+const PlaceActionButton = ({title, icon, action}:PlaceButtonProps) => {
   return (
     <Dialog>
     <DialogTrigger asChild>
-      <Button variant="outline" className='flex gap-x-2'>
-        <PlusCircle/>
-        Add Place
+      <Button variant="outline" className='flex gap-x-2 mr-4'>
+        {icon}
+        {title}
       </Button>
     </DialogTrigger>
     <DialogContent className="sm:max-w-[425px]">
-     <PlaceCreateForm/>
+     {action}
     </DialogContent>
   </Dialog>
   )
 }
 
-export default CreatePlace
+export default PlaceActionButton

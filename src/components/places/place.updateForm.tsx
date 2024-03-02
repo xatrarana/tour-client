@@ -24,56 +24,26 @@ const PlaceFormSchema = yup.object().shape({
     .typeError('Latitude must be a number'), 
   wardno: yup.string().required(),
   category: yup.string().oneOf(Object.values(PlaceCategory)).required(),
-  images: yup
-    .mixed()
-    .required("Image is required")
-    .test(
-      "imageType",
-      "Invalid image type",
-      (value: any) => {
-        if (!value || Object.keys(value).length === 0) return false;
-        const fileKeys = Object.keys(value);
-        return fileKeys.every((key: string) =>
-          ["image/jpeg", "image/png", "image/gif"].includes(value[key].type)
-        );
-      }
-    )
-    .test(
-      "imageSize",
-      "Image must be less than 2MB",
-      (value: any) => {
-        if (!value || Object.keys(value).length === 0) return false;
-        const fileKeys = Object.keys(value);
-        return fileKeys.every((key: string) => value[key].size <= 2 * 1024 * 1024); // 2MB in bytes
-      }
-    ),
-  thumbnail: yup
-    .mixed()
-    .required("Thumbnail is required")
-    .test(
-      "thumbnailType",
-      "Invalid thumbnail type",
-      (value: any) => {
-        if (!value || value.length === 0) return false;
-        return ["image/jpeg", "image/png"].includes(value[0].type);
-      }
-    )
-    .test(
-      "thumbnailSize",
-      "Thumbnail must be less than 3MB",
-      (value: any) => {
-        if (!value || value.length === 0) return false;
-        return value[0].size <= 3 * 1024 * 1024; // 500KB in bytes
-      }
-    ),
+  
 });
 
 type TPlaceFormData = yup.InferType<typeof PlaceFormSchema>;
 
-const PlaceCreateForm = () => {
+type TPayload = {
+    payload: TPlace
+}
+const PlaceUpdateForm = ({payload}: TPayload) => {
   const { register, handleSubmit ,formState: {errors}} = useForm<TPlaceFormData>({
     resolver: yupResolver(PlaceFormSchema),
-   
+    defaultValues:{
+        title: payload.title,
+        description: payload.description,
+        category:payload.category,
+        location: payload.location,
+        wardno: payload.wardno,
+        longitude: payload.points.coordinates[1],
+        latitude: payload.points.coordinates[0],
+    }
     
   });
 
@@ -112,8 +82,8 @@ const PlaceCreateForm = () => {
         <Textarea
           id="description"
           {...register("description")}
-          placeholder=""
-          aria-placeholder=""
+          rows={7}
+          aria-placeholder="description"
           className="mt-1 p-2 w-full border rounded-lg"
         ></Textarea>
       </div>
@@ -140,7 +110,7 @@ const PlaceCreateForm = () => {
             Ward no
           </Label>
           <Input
-            type="number"
+            type="string"
             id="wardno"
             {...register("wardno")}
             placeholder=""
@@ -201,43 +171,10 @@ const PlaceCreateForm = () => {
           </select>
       </div>
 
-      <div className="mb-2">
-        <Label
-          htmlFor="thumbnail"
-          className="block font-semibold text-gray-700 dark:text-white mb-2"
-        >
-          Thumbnail
-        </Label>
-        <Input
-            id="thumbnail"
-          type="file"
-          accept="image/*"
-          {...register("thumbnail")}
-          className="file-Input file-Input-bordered w-full "
-        />
-        <span className="text-red-500 text-xs">{errors && errors.thumbnail?.message}</span>
-      </div>
-      <div className="mb-2">
-        <Label
-          htmlFor="images"
-          className="block font-semibold text-gray-700 dark:text-white mb-2"
-        >
-          Images
-        </Label>
-        <Input
-          type="file"
-          id="images"
-          {...register("images")}
-          accept="image/*"
-          multiple
-          className="file-Input file-Input-bordered w-full "
-        />
-        <span className="text-red-500 text-xs">{errors && errors.images?.message}</span>
-      </div>
       <div className="flex gap-x-1 justify-end mt-3">
         <div className="flex justify-end">
           <Button type="submit" className=" tracking-wide px-7">
-            Create
+            update
           </Button>
         </div>
       </div>
@@ -245,4 +182,4 @@ const PlaceCreateForm = () => {
   );
 };
 
-export default PlaceCreateForm;
+export default PlaceUpdateForm;

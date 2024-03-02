@@ -10,14 +10,15 @@ export const places = [
         "_id": "65a123966f586163fe5fd953",
         "title": "Example City 1",
         "slug_name": "example-city-1",
-        "description": "This is an example place",
+        "description": "This is an example place JavaScript is a programming language that adds interactivity to your website. This happens in games, in the behavior of responses when buttons are pressed or with data entry on forms; with dynamic styling; with animation, etc. This article helps you get started with JavaScript and furthers your understanding of what is possible.",
         "location": "Example location",
         "wardno": "ward 123",
         "category": "Example Category",
         "thumbnail": "http://res.cloudinary.com/doqlnsnrp/image/upload/v1705059216/thumbnails/lmsmjeic9ix8qdjmlj3o.png",
         "images": [
             "http://res.cloudinary.com/doqlnsnrp/image/upload/v1705059217/images/ydhpohiuqg6j6xtz73ps.png",
-            "http://res.cloudinary.com/doqlnsnrp/image/upload/v1705059219/images/xpqo3rfvcgbd0fhsojhe.jpg"
+            "http://res.cloudinary.com/doqlnsnrp/image/upload/v1705059219/images/xpqo3rfvcgbd0fhsojhe.jpg",
+           
         ],
         "totalRating": 1,
         "rating": [

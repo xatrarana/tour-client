@@ -8,6 +8,7 @@ import PlacesPage from './page/Places.page';
 import ProfileWindow from './components/windows/Profile.window';
 import ProfileInformation from './components/profile/Profile.Information';
 import ProfilePassword from './components/profile/Profile.password';
+import PlacesDetailsPage from './page/places.details.page';
 function App() {
   return (
     <Router>
@@ -18,6 +19,7 @@ function App() {
         <Route path="/profile/information"  element={<ProfileWindow component={<ProfileInformation/>}/>} />
         <Route path="/profile/password"  element={<ProfileWindow component={<ProfilePassword/>}/>} />
         <Route path='/places' element={<PlacesPage/>}/>
+        <Route path='/places/details' element={<PlacesDetailsPage/>}/>
         <Route path="/*" element={<NotFound/>}/>
       </Routes>
     </Router>
