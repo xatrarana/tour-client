@@ -15,12 +15,12 @@ const PlaceFormSchema = yup.object().shape({
   longitude: yup
     .number()
     .required()
-    .transform((value, originalValue) => parseFloat(originalValue)) 
+    .transform((originalValue) => parseFloat(originalValue)) 
     .typeError('Longitude must be a number'), 
   latitude: yup
     .number()
     .required()
-    .transform((value, originalValue) => parseFloat(originalValue)) 
+    .transform((originalValue) => parseFloat(originalValue)) 
     .typeError('Latitude must be a number'), 
   wardno: yup.string().required(),
   category: yup.string().oneOf(Object.values(PlaceCategory)).required(),

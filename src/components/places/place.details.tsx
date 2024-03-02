@@ -7,7 +7,7 @@ import { useState } from "react";
 import PlaceActionButton from "./place.create";
 import PlaceUpdateForm from "./place.updateForm";
 import { Button } from "../ui/button";
-const IMAGEHEIGHT = 350
+// const IMAGEHEIGHT = 350
 const IMAGEWIDTH = '100%'
 const PlacesDetails = () => {
   const [URLSearchParams] = useSearchParams();

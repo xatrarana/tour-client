@@ -13,7 +13,7 @@ const schema = yup.object({
 type FormValues = yup.InferType<typeof schema>
 const VerifyPage = () => {
   const navigate = useNavigate()
-  const {register,handleSubmit,formState:{errors}} = useForm<FormValues>({
+  const {register,handleSubmit} = useForm<FormValues>({
     resolver: yupResolver(schema)
   })
   const onsubmit = (data:FormValues) => console.log(data)

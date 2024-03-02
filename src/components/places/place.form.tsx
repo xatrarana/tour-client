@@ -6,7 +6,6 @@ import PlaceCategory from "@/constants/PlaceCategoryEnum";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { TPlace } from "@/mockdata";
 
 const PlaceFormSchema = yup.object().shape({
   title: yup.string().trim().required(),
@@ -15,12 +14,12 @@ const PlaceFormSchema = yup.object().shape({
   longitude: yup
     .number()
     .required()
-    .transform((value, originalValue) => parseFloat(originalValue)) 
+    .transform((originalValue) => parseFloat(originalValue)) 
     .typeError('Longitude must be a number'), 
   latitude: yup
     .number()
     .required()
-    .transform((value, originalValue) => parseFloat(originalValue)) 
+    .transform(( originalValue) => parseFloat(originalValue)) 
     .typeError('Latitude must be a number'), 
   wardno: yup.string().required(),
   category: yup.string().oneOf(Object.values(PlaceCategory)).required(),
