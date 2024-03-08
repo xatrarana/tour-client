@@ -40,7 +40,8 @@ const SignInWindow = () => {
           navigate('/');
     } catch (error) {
         if (error instanceof AxiosError) {
-            const errorMessage = error.response?.data.message ??  error.response?.data.errors[0].message;
+          console.log(error)
+            const errorMessage = error.response?.data.error ||  error.response?.data.errors[0].message;
             toast({ variant: 'destructive', title: errorMessage });
         } else {
             // console.error('An unexpected error occurred:', error);

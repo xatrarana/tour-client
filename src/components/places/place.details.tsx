@@ -14,7 +14,7 @@ const IMAGEWIDTH = '95%'
 const PlacesDetails = () => {
   const [searchParams] = useSearchParams();
   const [place, setPlaceData] = useState<TPlace | null>(null); // Follow naming convention for state
-  const [error, setError] = useState(false);
+  const [error, setError] = useState({state:false, message:''});
   const [url, setSrcUrl] = useState<string | null>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
   // Function to handle image loading
@@ -29,7 +29,11 @@ const PlacesDetails = () => {
         setPlaceData(response.data.data);
       } catch (error) {
         if(error instanceof AxiosError){
-          setError(true)
+          setError({
+            ...error,
+            state: true,
+            message: error.response?.data.error
+          })
         }
         // Consider setting an error state here to give feedback to the user
       }
@@ -56,7 +60,7 @@ const PlacesDetails = () => {
       
         {!place && !error && <DetailsSkeleton/>}
         {
-          error && <NotFound height="h-40" message="Place you are looking doesn't exits" />
+          error.state && <NotFound height="h-40" message={error.message} />
         }
 
      {place && (
@@ -109,7 +113,7 @@ const PlacesDetails = () => {
          </div>
        <div className="grid grid-cols-2 mt-3 place-content-center">
            <span className="flex items-center  justify-center gap-x-2"><Map /><p>{place?.location}</p></span>
-           <Link target="_blank" to={`http://www.google.com/maps/place/49.46800006494457,17.11514008755796`} className="flex items-center  justify-center gap-x-2"><Navigation /><p>Go to Maps</p></Link>
+           <Link target="_blank" to={`http://www.google.com/maps/place/${place.points.coordinates[0]},${place.points.coordinates[1]}`} className="flex items-center  justify-center gap-x-2"><Navigation /><p>Go to Maps</p></Link>
        </div>
       
        </div>
