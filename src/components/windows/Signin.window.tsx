@@ -33,17 +33,17 @@ const SignInWindow = () => {
   const onSubmit = async (data: TLoginFormData) => {
     setIsLoading(true);
     try {
-        const response = await axios.post('/auth/signin', data);
+        const response = await axios.post('/auth/signin/ad', data);
         const userData = response.data.data.user;
-        handleLogin(userData, response.data.data.refreshToken);
-        toast({ variant: 'success' ,title: response.data.message });
-        navigate('/');
+          handleLogin(userData, response.data.data.accessToken);
+          toast({ variant: 'success' ,title: response.data.message });
+          navigate('/');
     } catch (error) {
         if (error instanceof AxiosError) {
             const errorMessage = error.response?.data.message ??  error.response?.data.errors[0].message;
             toast({ variant: 'destructive', title: errorMessage });
         } else {
-            console.error('An unexpected error occurred:', error);
+            // console.error('An unexpected error occurred:', error);
             toast({ variant: 'destructive', title: 'An unexpected error occurred' });
         }
     } finally {
