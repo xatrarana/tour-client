@@ -14,13 +14,6 @@ const UserHomeCenter = () => {
         </div>
       </div>
       <div className="scroll-only p-3">
-        
-          {/* <div className="h-40 flex items-center justify-center">
-            <span className="loading loading-ball loading-xs"></span>
-            <span className="loading loading-ball loading-sm"></span>
-            <span className="loading loading-ball loading-md"></span>
-            <span className="loading loading-ball loading-lg"></span>
-          </div> */}
           <UsersTableList/>
       </div>
     </div>

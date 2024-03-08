@@ -1,16 +1,11 @@
-import instance from "@/lib/axiosConfig"
-import { Button } from "../ui/button";
-
-const UserActionButtons = () => {
-  const handleWhoAmI = async () => {
-    const response = await instance.get('/auth/me');
-    console.log(response.data)
-  } 
+import AlertDialogContainer from "../places/confirm.Dialog";
+type UserActionButtonsProps = {
+  userId: string,
+  action?: 'UPDATE' | 'DELETE'
+}
+const UserActionButtons: React.FC<UserActionButtonsProps> = ({userId}) => {
   return (
-    <div>
-        fdf
-        <Button onClick={handleWhoAmI}>who am i </Button>
-    </div>
+     <AlertDialogContainer path={`/users/delete/ad/${userId}`} redirect="/users"/>
   )
 }
 

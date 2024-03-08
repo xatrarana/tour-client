@@ -1,23 +1,24 @@
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu"
-import { Button } from '../ui/button';
-import { MoreHorizontal } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table';
-import { TUser } from './usersignupform';
 import CustomTable from '../common/CustomTable';
 import { useEffect, useState } from 'react';
 import instance from '@/lib/axiosConfig';
 import { Loading } from "@/page";
+import UserActionButtons from "./Users.ActionButtons";
+
+interface UserResponse {
+  _id: string;
+  username: string;
+  email: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  fullname: string;
+}
 
 const UsersTableList = () => {
     const [globalFiltering, setFiltering] = useState('')
-    const [UsersData, setUsersData] = useState<TUser[] | null>(null)
+    const [UsersData, setUsersData] = useState<UserResponse[] | null>(null)
   const getVideoUrlsData = async () => {
     try {
       const response = await instance.get('/users', {
@@ -31,10 +32,11 @@ const UsersTableList = () => {
       console.log(error)
     }
   }
+ 
   useEffect(() => {
     getVideoUrlsData()
-  }, [])
-    const columns: ColumnDef<TUser>[] = [
+  }, [UsersData])
+    const columns: ColumnDef<UserResponse>[] = [
        
         {
           id:"sample",
@@ -71,30 +73,9 @@ const UsersTableList = () => {
           cell: ({ row }) => {
             const user = row.original
             return (
-                <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-8 w-8 p-0">
-                    <span className="sr-only">Open menu</span>
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                  <DropdownMenuItem
-                    onClick={() => navigator.clipboard.writeText(user.email)}
-                  >
-                    Copy email ID
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                   <span>Update user</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                   <span>Delete user</span>
-
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+               <div className="flex gap-x-1">
+                  <UserActionButtons action={'DELETE'} userId={user._id} />
+               </div>
             )
           },
         },
@@ -106,7 +87,7 @@ const UsersTableList = () => {
     !UsersData && <Loading/>
    }
     {
-        UsersData && <CustomTable<TUser>  globalFiltering={globalFiltering} setFiltering={setFiltering} columns={columns} data={UsersData} />
+        UsersData && <CustomTable<UserResponse>  globalFiltering={globalFiltering} setFiltering={setFiltering} columns={columns} data={UsersData} />
     }
    </>
   )

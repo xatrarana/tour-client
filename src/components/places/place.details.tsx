@@ -54,7 +54,7 @@ const PlacesDetails = () => {
         <div className="mt-3 md:mt-0 flex">
         <PlaceActionButton icon={<Pencil />} action={<PlaceUpdateForm  payload={place}/>} title= {"Update Place"} />
           
-          <AlertDialogContainer placeId={itemId} />
+          <AlertDialogContainer path={`/places/${itemId}/clear`} redirect={'/places'} />
         </div>
       </div>
       

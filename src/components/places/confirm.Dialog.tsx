@@ -14,19 +14,21 @@ import instance from "@/lib/axiosConfig"
 import { AxiosError } from "axios"
 import { Trash2 } from "lucide-react"
 import { useToast } from "../ui/use-toast"
-import { useNavigate } from "react-router-dom"
+import {  useNavigate } from "react-router-dom"
   
 type props = {
-    placeId: string | null
+    path: string,
+    redirect: string 
+
 }
-const AlertDialogContainer: React.FC<props> = ( {placeId}) => {
+const AlertDialogContainer: React.FC<props> = ( {path,redirect}) => {
     const {toast} = useToast()
     const navigate = useNavigate()
     const handleActionDelete = async () => {
         try {
-            const response = await instance.delete(`/places/${placeId}/clear`);
+            const response = await instance.delete(path);
             toast({variant: "success", title: response.data.message})
-            navigate('/places')
+            navigate(redirect)
         } catch (error) {
             if(error instanceof AxiosError){
                 toast({variant: "destructive", title: error.response?.data.error})
@@ -37,7 +39,7 @@ const AlertDialogContainer: React.FC<props> = ( {placeId}) => {
       <AlertDialog>
         <AlertDialogTrigger asChild>
         <Button variant={'destructive'} className="flex gap-x-2">
-          <Trash2 /> Delete
+          <Trash2 />
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
@@ -45,7 +47,7 @@ const AlertDialogContainer: React.FC<props> = ( {placeId}) => {
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete 
-              place and remove place data from servers.
+              data and remove data from servers.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
