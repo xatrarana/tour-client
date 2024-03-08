@@ -2,12 +2,11 @@ import { useEffect, useState } from "react"
 
 const UserGreeting = () => {
     const [name, setName] = useState<string | null>(null)
-    useEffect(()=>{
-        const id = setTimeout(()=>{
-            setName('Castelltech7')
-        },2000)
-
-        return () => clearTimeout(id)
+    
+    useEffect( ()=>{
+       const data = localStorage.getItem('user');
+       const user = JSON.parse(data!);
+      setName(user.username)
     },[name])
   return (
     <div className='mt-1 '>

@@ -1,21 +1,36 @@
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { AlignLeft, LogOut, Settings,  UserIcon } from "lucide-react";
-import { useNavbar } from "@/context/ResponsiveNabBar";
+import { useNavbar } from "@/context/ResponsiveNabBar"; 
+import axios from "@/lib/axiosConfig";
+import { useAuth } from "@/context/AuthContext";
+import { AxiosError } from "axios";
+import { useToast } from "../ui/use-toast";
 
 const Navbar = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate()
     const {dispatch} = useNavbar()
-
+    const {state : {
+      user
+    },handleLogout} = useAuth()
+    const {toast} = useToast()
     const logout = async () => {
-        axios.defaults.withCredentials = true;
-        await axios.post("/api/v1/auth/logout").then(resp => {
-          console.log(resp.data);
-          localStorage.removeItem("token");
-          navigate("/login")
-          
-        }).catch(err => console.log(err.response.data));
+      try {
+        const response = await axios.post("/auth/logout");
+        console.log(response.data.success)
+        if(response.data.success && response.data.statusCode){
+          toast({ variant: 'success', title: response.data.message });
+          handleLogout();
+          navigate("/auth/login");
+        }
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          toast({ variant: 'destructive', title: error.response?.data.message });
+      } else {
+          toast({ variant: 'destructive', title:' An unexpected error occurred' });
       }
+      }
+    };
+    
 
   return (
     <header className="w-full shadow-sm">
@@ -34,11 +49,17 @@ const Navbar = () => {
               role="button"
               className="btn btn-ghost btn-circle avatar"
             >
-              <div className="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS Navbar component"
-                  src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+              <div className="w-10 rounded-full bg-gray-200 dark:text-black">
+                {!user?.avatar && <div className="text-xl font-semibold py-1.5">
+                  <span>{user?.fullname.split(' ')[0].charAt(0).toUpperCase()}</span>
+                  <span>{user?.fullname.split(' ')[1].charAt(0).toUpperCase()}</span>
+                  </div>}
+                {
+                  user?.avatar && <img
+                  alt={user?.username}
+                  src={user?.avatar}
                 />
+                }
               </div>
             </div>
             <ul

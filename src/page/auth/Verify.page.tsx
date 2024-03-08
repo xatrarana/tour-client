@@ -23,7 +23,7 @@ const VerifyPage = () => {
     <div className="h-screen flex justify-center items-baseline">
      
       <div className="shadow-lg rounded-md self-center">
-      <button onClick={() => navigate('/users/login')} className=" btn-ghost rounded-md cursor-pointer">
+      <button onClick={() => navigate(-1)} className=" btn-ghost rounded-md cursor-pointer">
         <ChevronLeft size={30}/>
       </button>
         <div className="text-center p-3">

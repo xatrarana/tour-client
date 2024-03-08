@@ -42,7 +42,7 @@ const ProfilePassword = () => {
           <div className="pt-1">
             <p className="text-2xl font-bold">Password</p>
           </div>
-          <div className="pt-2 mt-5 md:mt-5">
+          <div className="pt-2 mt-5 md:mt-5  w-full  max-w-sm">
             <form onSubmit={handleSubmit(submit)} className="flex flex-col gap-5">
                 <div className="">
                   <label htmlFor="password" className="text-sm font-bold">Password<span className="text-red-700 text-md"> *</span></label>

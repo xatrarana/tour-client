@@ -28,7 +28,7 @@ const FeaturedWindow = () => {
         </div>
         <div className='flex flex-col w-full gap-y-4 p-2'>
         <p>Organize engaging events</p>
-          <Button className='py-5 px-7'>Manage Events</Button>
+          <Button className='py-5 px-7' onClick={()=>navigate('/events')}>Manage Events</Button>
         </div>
       </div>
 
@@ -39,7 +39,7 @@ const FeaturedWindow = () => {
         </div>
         <div className='flex flex-col w-full  gap-y-4 p-2'>
         <p>Showcase with video content</p>
-          <Button className='py-5 px-7'>Upload Video</Button>
+          <Button className='py-5 px-7' onClick={()=>navigate('/videos')} >Upload Video</Button>
         </div>
       </div>
     </div>

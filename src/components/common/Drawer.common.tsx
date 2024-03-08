@@ -23,19 +23,19 @@ const Drawer = () => {
                     <h1 className="ml-3 text-md tracking-tight">Places</h1>
                     </div>
                 </Link>
-                <Link to={'/'}  >
+                <Link to={'/users'}  >
                     <div className={cn("flex items-center h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-white dark:hover:text-black")}>
                     <UsersIcon size={22} className="ml-5" /> 
                     <h1 className="ml-3 text-md tracking-tight">Users</h1>
                     </div>
                 </Link>
-                <Link to={'/'}  >
+                <Link to={'/events'}  >
                     <div className={cn("flex items-center h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-white dark:hover:text-black")}>
                     <Calendar size={22} className="ml-5" /> 
                     <h1 className="ml-3 text-md tracking-tight">Events</h1>
                     </div>
                 </Link>
-                <Link to={'/'}  >
+                <Link to={'/videos'}  >
                     <div className={cn("flex items-center h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-white dark:hover:text-black")}>
                     <VideoIcon size={22} className="ml-5" /> 
                     <h1 className="ml-3 text-md tracking-tight">Videos</h1>

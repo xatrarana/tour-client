@@ -1,11 +1,11 @@
 import { useNavbar } from '@/context/ResponsiveNabBar'
-import UserGreeting from '../UserGreeting.component'
+import UserGreeting from '../dashboard/UserGreeting.component'
 import WorkSpace from '../Workspace.component'
 import Drawer from '../common/Drawer.common'
 import MobileMenu from '../common/Mobile.Navbar'
 import Navbar from '../common/Navbar.common'
-import DetailsWindow from './Details.window'
-import FeaturedWindow from './Featured.window'
+import DetailsWindow from '../dashboard/Details.window'
+import FeaturedWindow from '../dashboard/Featured.window'
 const DashboardWindow = () => {
   const {state} = useNavbar()
   return (

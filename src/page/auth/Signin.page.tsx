@@ -1,17 +1,16 @@
 import SignInWindow from "@/components/windows/Signin.window"
-import useAuthState from "@/hooks/Auth.hook"
+import { useAuth } from "@/context/AuthContext"
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const SignInPage = () => {
-  const {isLoggedIn} = useAuthState();
-  const navigate = useNavigate();
+  const {state} = useAuth();
+  const navigate = useNavigate()
   useEffect(() => {
-    if(isLoggedIn){
-      navigate('/')
+    if(state.isAuthenticated){
+      return navigate('/')
     }
-  
-  },[isLoggedIn])
+  },[state.isAuthenticated])
   return (
     <SignInWindow/>
   )

@@ -1,6 +1,5 @@
-import React, { useMemo } from 'react';
-import { ColumnDef, useReactTable, getCoreRowModel, flexRender, getPaginationRowModel } from '@tanstack/react-table';
-import { TPlace, places } from '../../mockdata';
+import React, { useEffect, useState } from 'react';
+import { ColumnDef, useReactTable, getCoreRowModel, flexRender, getPaginationRowModel,getFilteredRowModel } from '@tanstack/react-table';
 import {
   Table,
   TableBody,
@@ -21,9 +20,45 @@ import {
 import { Button } from '../ui/button';
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { fetchPlaces } from '@/lib/services';
+import TableSkeleton from './Table.skeleton';
 
-const PlaceTable: React.FC = () => {
-  const data = useMemo(() => places, []);
+type TPlace = {
+  points: {
+    coordinates: [number, number];
+    type: string;
+  };
+  _id: string;
+  title: string;
+  slug_name: string;
+  description: string;
+  location: string;
+  wardno: string;
+  category: string;
+  thumbnail: string;
+  images: string[];
+  totalRating: number;
+  rating: {
+    userId: string;
+    userRating: number;
+    _id: string;
+  }[];
+  __v: number;
+};
+
+type tableProp = {
+  globalFiltering: string,
+  setFiltering: React.Dispatch<React.SetStateAction<string>>
+}
+const PlaceTable: React.FC<tableProp> = ({globalFiltering, setFiltering}) => {
+  const query = useQuery({ queryKey: ['places'], queryFn: fetchPlaces })
+  const [placesData, setPlaceData] = useState([])
+  useEffect(() => {
+    if(!query.isLoading){
+      setPlaceData(query.data.data)
+    }
+  },[query.isLoading])
   const columns: ColumnDef<TPlace>[] = [
     {
       header: 'Title',
@@ -73,16 +108,26 @@ const PlaceTable: React.FC = () => {
 
   ];
 
+ 
   const table = useReactTable({
     columns,
-    data,
+    data: placesData, // data validation
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel()
+    getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      globalFilter: globalFiltering,
+    },
+    onGlobalFilterChange: setFiltering
   });
 
   return (
     <>
-      <Table className='table-scroll'>
+    {query.isLoading && <TableSkeleton table={table}/>}
+      {
+        !query.isLoading && query.data.data && (
+          <>
+          <Table className='table-scroll'>
         <TableHeader>
 
           {
@@ -116,21 +161,24 @@ const PlaceTable: React.FC = () => {
         </TableBody>
       </Table>
       <div className='mt-3 mb-3 flex items-center justify-center gap-x-5'>
-        <Button variant={'outline'} onClick={() => table.setPageIndex(0)}>
-          <ChevronLeft />
-          <ChevronLeft />
+        <Button variant={'ghost'} onClick={() => table.setPageIndex(0)}>
+          <ChevronLeft size={15} />
+          <ChevronLeft size={15} />
         </Button>
-        <Button variant={'outline'} disabled={!table.getCanPreviousPage()} onClick={() => table.previousPage()}>
-          <ChevronLeft />
+        <Button variant={'ghost'} disabled={!table.getCanPreviousPage()} onClick={() => table.previousPage()}>
+          <ChevronLeft  />
         </Button>
-        <Button variant={'outline'} disabled={!table.getCanNextPage()} onClick={() => table.nextPage()}>
+        <Button variant={'ghost'} disabled={!table.getCanNextPage()} onClick={() => table.nextPage()}>
           <ChevronRight />
         </Button>
-        <Button variant={'outline'} onClick={() => table.setPageIndex(table.getPageCount() - 1)}>
-          <ChevronRight />
-          <ChevronRight />
+        <Button variant={'ghost'} onClick={() => table.setPageIndex(table.getPageCount() - 1)}>
+          <ChevronRight size={15} />
+          <ChevronRight size={15} />
         </Button>
       </div>
+          </>
+        )
+      }
     </>
   );
 };

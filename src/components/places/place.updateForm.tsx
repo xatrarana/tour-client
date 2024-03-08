@@ -7,6 +7,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { TPlace } from "@/mockdata";
+import instance,{cancelTokenSource} from "@/lib/axiosConfig";
+import { isAxiosError } from "axios";
+import { useToast } from "../ui/use-toast";
+import { useState } from "react";
 
 const PlaceFormSchema = yup.object().shape({
   title: yup.string().trim().required(),
@@ -30,9 +34,14 @@ const PlaceFormSchema = yup.object().shape({
 type TPlaceFormData = yup.InferType<typeof PlaceFormSchema>;
 
 type TPayload = {
-    payload: TPlace
+    payload: TPlace,
+   
 }
+
+const token = localStorage.getItem('token');
 const PlaceUpdateForm = ({payload}: TPayload) => {
+  const {toast} = useToast()
+  const [progress, setProgress] = useState(false)
   const { register, handleSubmit ,formState: {errors}} = useForm<TPlaceFormData>({
     resolver: yupResolver(PlaceFormSchema),
     defaultValues:{
@@ -46,14 +55,40 @@ const PlaceUpdateForm = ({payload}: TPayload) => {
     }
     
   });
-
-  const onSubmit = (data: TPlaceFormData) => {
-    console.log(data);
+  const handleCancel = () => {
+    if (cancelTokenSource) {
+        cancelTokenSource.cancel('Operation canceled by the user.');
+    }
+  }
+  const onSubmit =async (data: TPlaceFormData) => {
+    setProgress(true)
+    try {
+      const response = await instance.patch(`/places/${payload._id}/update`, data,{
+        headers:{
+          "Content-Type":'application/json',
+          'Authorization':`Bearer ${token}`
+        },
+        cancelToken: cancelTokenSource.token
+      })
+      toast({variant: 'success', title: response.data.message})
+      
+      setTimeout(() => {
+        setProgress(false)
+        window.location.reload()
+      }, 1000)
+    } catch (error) {
+      if(isAxiosError(error)){
+        console.log(error.response?.data.error)
+      }
+    }finally{
+      setProgress(false)
+    }
   };
 
 
  
   return (
+    
     <form
       onSubmit={handleSubmit(onSubmit)}
       encType="multipart/form-data"
@@ -172,11 +207,23 @@ const PlaceUpdateForm = ({payload}: TPayload) => {
       </div>
 
       <div className="flex gap-x-1 justify-end mt-3">
-        <div className="flex justify-end">
+      {progress &&  (
+    <div className="flex gap-x-3 items-center my-5">
+      <progress className="progress w-4/5"></progress>
+      <p  onClick={handleCancel} className=" cursor-pointer tracking-wide text-md">
+    cancel
+  </p>
+    </div>
+   )}
+      {
+        !progress && (
+          <div className="flex justify-end">
           <Button type="submit" className=" tracking-wide px-7">
             update
           </Button>
         </div>
+        )
+      }
       </div>
     </form>
   );

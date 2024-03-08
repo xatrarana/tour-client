@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
 import { useNavbar } from "@/context/ResponsiveNabBar";
+import { useAuth } from "@/context/AuthContext";
 
 const schema = yup.object({
   username: yup.string().required(),
@@ -19,16 +20,19 @@ type ProfileInformationProps = yup.InferType<typeof schema>
 
 const ProfileInformation = () => {
   const {state} = useNavbar()
+  const {state:{
+    user
+  }} = useAuth()
   useEffect(()=>{
-    document.title = "Profile | Information"
+    document.title = "Profile | Information";
   },[])
   const {register, handleSubmit} = useForm<ProfileInformationProps>({
     resolver: yupResolver(schema),
     defaultValues:{
-      username:"castelltech7",
-      email:"castelltech7@gmail.com",
-      firstname:"Castell",
-      lastname:"Tech",
+      username:user?.username,
+      email:user?.email,
+      firstname:user?.fullname.split(' ')[0],
+      lastname:user?.fullname.split(' ')[1],
     }
   });
 

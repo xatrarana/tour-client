@@ -6,6 +6,11 @@ import PlaceCategory from "@/constants/PlaceCategoryEnum";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+import instance, { cancelTokenSource } from "@/lib/axiosConfig";
+import axios, { AxiosError } from "axios";
+import { useState } from "react";
+import { useToast } from "../ui/use-toast";
+import success from '../../assets/success.svg'
 
 const PlaceFormSchema = yup.object().shape({
   title: yup.string().trim().required(),
@@ -68,22 +73,83 @@ const PlaceFormSchema = yup.object().shape({
 });
 
 type TPlaceFormData = yup.InferType<typeof PlaceFormSchema>;
-
 const PlaceCreateForm = () => {
+  const [progress, setProgress] = useState(false)
+  const [dialog, setDialogBox] = useState(false)
+  const {toast} = useToast()
   const { register, handleSubmit ,formState: {errors}} = useForm<TPlaceFormData>({
     resolver: yupResolver(PlaceFormSchema),
-   
-    
   });
+  const handleCancel = () => {
+    if (cancelTokenSource) {
+        cancelTokenSource.cancel('Operation canceled by the user.');
+    }
+};
 
-  const onSubmit = (data: TPlaceFormData) => {
-    console.log(data);
+  const onSubmit = async (data: TPlaceFormData) => {
+    setProgress(true)
+    try {
+      const formData = new FormData();
+      // Append text fields to FormData
+      Object.entries(data).forEach(([key, value]) => {
+          if (typeof value === 'string' || typeof value === 'number') {
+              formData.append(key, value.toString());
+          }
+      });
+      // Append files to FormData
+      if (data.thumbnail instanceof FileList) {
+          formData.append('thumbnail', data.thumbnail[0]);
+      }
+      if (data.images instanceof FileList) {
+          for (let i = 0; i < data.images.length; i++) {
+              formData.append('images', data.images[i]);
+          }
+      }
+      await instance.post('/places/create', formData, {
+          headers: {
+              'Content-Type': 'multipart/form-data'
+          },
+          cancelToken: cancelTokenSource.token
+      });
+      setProgress(false)
+      setDialogBox(true);
+      setTimeout(() => {
+        setDialogBox(false);
+        window.location.reload()
+      },1000)
+  } catch (error) {
+    setProgress(false)
+      if (error instanceof AxiosError) {
+          toast({variant:'destructive', title: error.response?.data})
+      }else if(axios.isCancel(error)){
+        toast({variant:'destructive', title:'Request canceled', description:error.message})
+      }
+  }finally{
+    setProgress(false)
+  }
   };
 
 
  
   return (
-    <form
+    
+    <>
+   {progress &&  (
+    <div className="flex gap-x-3 items-center my-5">
+      <progress className="progress w-4/5"></progress>
+      <p  onClick={handleCancel} className=" cursor-pointer tracking-wide text-md">
+    cancel
+  </p>
+    </div>
+   )}
+   {
+    !progress && dialog && (<div className="flex gap-x-5 items-center ">
+      <img className="h-5 w-5" src={success} alt="success"/>
+      <p>Place created successfully.</p>
+    </div>)
+   }
+    {!progress && !dialog && (
+      <form
       onSubmit={handleSubmit(onSubmit)}
       encType="multipart/form-data"
       className="max-w-md "
@@ -208,7 +274,7 @@ const PlaceCreateForm = () => {
           Thumbnail
         </Label>
         <Input
-            id="thumbnail"
+          id="thumbnail"
           type="file"
           accept="image/*"
           {...register("thumbnail")}
@@ -234,13 +300,15 @@ const PlaceCreateForm = () => {
         <span className="text-red-500 text-xs">{errors && errors.images?.message}</span>
       </div>
       <div className="flex gap-x-1 justify-end mt-3">
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-x-4">
           <Button type="submit" className=" tracking-wide px-7">
             Create
           </Button>
         </div>
       </div>
     </form>
+    )}
+    </>
   );
 };
 

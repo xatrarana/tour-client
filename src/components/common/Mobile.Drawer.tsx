@@ -28,19 +28,19 @@ const MobileDrawer = () => {
                     <h1 className="ml-3 text-md tracking-tight">Places</h1>
                     </div>
                 </Link>
-                <Link to={'/'} onClick={()=>dispatch({type:"CLOSE_NAVBAR"})} >
+                <Link to={'/users'} onClick={()=>dispatch({type:"CLOSE_NAVBAR"})} >
                     <div className={cn("flex items-center justify-center gap-x-10 h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-white dark:hover:text-black")}>
                     <UsersIcon size={22}  /> 
                     <h1 className="ml-3 text-md tracking-tight">Users</h1>
                     </div>
                 </Link>
-                <Link to={'/'} onClick={()=>dispatch({type:"CLOSE_NAVBAR"})} >
+                <Link to={'/events'} onClick={()=>dispatch({type:"CLOSE_NAVBAR"})} >
                     <div className={cn("flex items-center justify-center gap-x-10 h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-white dark:hover:text-black")}>
                     <Calendar size={22}  /> 
                     <h1 className="ml-3 text-md tracking-tight">Events</h1>
                     </div>
                 </Link>
-                <Link to={'/'} onClick={()=>dispatch({type:"CLOSE_NAVBAR"})} >
+                <Link to={'/videos'} onClick={()=>dispatch({type:"CLOSE_NAVBAR"})} >
                     <div className={cn("flex items-center justify-center gap-x-10 h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-white dark:hover:text-black")}>
                     <VideoIcon size={22}  /> 
                     <h1 className="ml-3 text-md tracking-tight">Videos</h1>
