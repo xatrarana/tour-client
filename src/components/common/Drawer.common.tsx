@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils"
 import {  Calendar, LucideHome, MapPinned, UsersIcon, VideoIcon } from "lucide-react"
-import { Link } from "react-router-dom"
+import {  NavLink } from "react-router-dom"
 
 const Drawer = () => {
   return (
@@ -11,36 +11,36 @@ const Drawer = () => {
 
              {/* actions buttons */}
              <div className="w-ful px-2 mt-2 flex flex-col gap-y-3">
-                <Link to={'/'}  >
+                <NavLink to={'/'}  >
                     <div className={cn("flex items-center h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-white  dark:hover:text-black")}>
                     <LucideHome size={22} className="ml-5" /> 
                     <h1 className="ml-3 text-md font-meditightacking-wider">Home</h1>
                     </div>
-                </Link>
-                <Link to={'/places'}  >
+                </NavLink>
+                <NavLink to={'/places'}  >
                     <div className={cn("flex items-center h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-white dark:hover:text-black")}>
                     <MapPinned size={22} className="ml-5" /> 
                     <h1 className="ml-3 text-md tracking-tight">Places</h1>
                     </div>
-                </Link>
-                <Link to={'/users'}  >
+                </NavLink>
+                <NavLink to={'/users'}  >
                     <div className={cn("flex items-center h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-white dark:hover:text-black")}>
                     <UsersIcon size={22} className="ml-5" /> 
                     <h1 className="ml-3 text-md tracking-tight">Users</h1>
                     </div>
-                </Link>
-                <Link to={'/events'}  >
+                </NavLink>
+                <NavLink to={'/events'}  >
                     <div className={cn("flex items-center h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-white dark:hover:text-black")}>
                     <Calendar size={22} className="ml-5" /> 
                     <h1 className="ml-3 text-md tracking-tight">Events</h1>
                     </div>
-                </Link>
-                <Link to={'/videos'}  >
+                </NavLink>
+                <NavLink to={'/videos'}  >
                     <div className={cn("flex items-center h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-white dark:hover:text-black")}>
                     <VideoIcon size={22} className="ml-5" /> 
                     <h1 className="ml-3 text-md tracking-tight">Videos</h1>
                     </div>
-                </Link>
+                </NavLink>
              </div>
    </div>
 

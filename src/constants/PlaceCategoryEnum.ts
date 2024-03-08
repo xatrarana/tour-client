@@ -1,4 +1,4 @@
-enum PlaceCategory {
+export enum PlaceCategory {
     CONTINENT = "Continent",
     COUNTRY = "Country",
     STATE = "State/Province",

@@ -1,12 +1,13 @@
 import { useNavbar } from '@/context/ResponsiveNabBar'
-import UserGreeting from '../dashboard/UserGreeting.component'
 import WorkSpace from '../Workspace.component'
 import Drawer from '../common/Drawer.common'
-import MobileMenu from '../common/Mobile.Navbar'
 import Navbar from '../common/Navbar.common'
-import DetailsWindow from '../dashboard/Details.window'
-import FeaturedWindow from '../dashboard/Featured.window'
-const DashboardWindow = () => {
+import MobileDrawer from '../common/Mobile.Drawer'
+
+type AppLayoutProps = {
+    children: React.ReactNode
+}
+const AppLayout: React.FC<AppLayoutProps> = ({children}) => {
   const {state} = useNavbar()
   return (
     <main className='h-screen grid-container'>
@@ -14,16 +15,14 @@ const DashboardWindow = () => {
             <Drawer/>
         </section>
         <section className='workspace-section '>
-            <Navbar/>
+        <Navbar/>
             <WorkSpace>
-                <UserGreeting/>
-                <FeaturedWindow/>
-                <DetailsWindow/>
+               {children}
             </WorkSpace>
         </section>
-        {state.isNavbarOpen && <MobileMenu/>}
+        {state.isNavbarOpen && <MobileDrawer/>}
     </main>
   )
 }
 
-export default DashboardWindow
+export default AppLayout

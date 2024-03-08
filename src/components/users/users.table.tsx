@@ -1,42 +1,17 @@
 import { ColumnDef } from '@tanstack/react-table';
 import CustomTable from '../common/CustomTable';
-import { useEffect, useState } from 'react';
-import instance from '@/lib/axiosConfig';
+import {  useMemo, useState } from 'react';
 import { Loading } from "@/page";
-import UserActionButtons from "./Users.ActionButtons";
+import AlertDialogContainer from '../places/confirm.Dialog';
+import { TUserResponse, useData } from '@/context/DataContext';
 
-interface UserResponse {
-  _id: string;
-  username: string;
-  email: string;
-  role: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-  fullname: string;
-}
+
 
 const UsersTableList = () => {
     const [globalFiltering, setFiltering] = useState('')
-    const [UsersData, setUsersData] = useState<UserResponse[] | null>(null)
-  const getVideoUrlsData = async () => {
-    try {
-      const response = await instance.get('/users', {
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': '5bdb68c9efa67cf69f3425f908'
-        }
-      })
-      setUsersData(response.data.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
- 
-  useEffect(() => {
-    getVideoUrlsData()
-  }, [UsersData])
-    const columns: ColumnDef<UserResponse>[] = [
+    const {userData} = useData()
+    const userDataMemoized = useMemo(() => userData, [userData]);
+    const columns: ColumnDef<TUserResponse>[] = [
        
         {
           id:"sample",
@@ -69,13 +44,11 @@ const UsersTableList = () => {
           }
         },
         {
-          id: "actions",
+          id: "sanple",
           cell: ({ row }) => {
             const user = row.original
             return (
-               <div className="flex gap-x-1">
-                  <UserActionButtons action={'DELETE'} userId={user._id} />
-               </div>
+                  <AlertDialogContainer path={`/users/delete/ad/${user._id}`} redirect="/users" />
             )
           },
         },
@@ -84,10 +57,10 @@ const UsersTableList = () => {
   return (
    <>
    {
-    !UsersData && <Loading/>
+    !userData && <Loading/>
    }
     {
-        UsersData && <CustomTable<UserResponse>  globalFiltering={globalFiltering} setFiltering={setFiltering} columns={columns} data={UsersData} />
+        userData && <CustomTable<TUserResponse>  globalFiltering={globalFiltering} setFiltering={setFiltering} columns={columns} data={userDataMemoized} />
     }
    </>
   )

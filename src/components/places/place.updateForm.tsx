@@ -34,7 +34,7 @@ const PlaceFormSchema = yup.object().shape({
 type TPlaceFormData = yup.InferType<typeof PlaceFormSchema>;
 
 type TPayload = {
-    payload: TPlace,
+    payload: TPlace | null,
    
 }
 
@@ -45,13 +45,13 @@ const PlaceUpdateForm = ({payload}: TPayload) => {
   const { register, handleSubmit ,formState: {errors}} = useForm<TPlaceFormData>({
     resolver: yupResolver(PlaceFormSchema),
     defaultValues:{
-        title: payload.title,
-        description: payload.description,
-        category:payload.category,
-        location: payload.location,
-        wardno: payload.wardno,
-        longitude: payload.points.coordinates[1],
-        latitude: payload.points.coordinates[0],
+        title: payload?.title,
+        description: payload?.description,
+        category:payload?.category,
+        location: payload?.location,
+        wardno: payload?.wardno,
+        longitude: payload?.points.coordinates[1],
+        latitude: payload?.points.coordinates[0],
     }
     
   });

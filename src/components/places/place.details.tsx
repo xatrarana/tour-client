@@ -1,5 +1,4 @@
 import { Link, useSearchParams } from "react-router-dom"
-import { TPlace } from "@/mockdata";
 import NotFound from "@/page/404NotFound.page";
 import { Map, Navigation, Pencil, Star } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -9,23 +8,24 @@ import instance from "@/lib/axiosConfig";
 import { AxiosError } from "axios";
 import DetailsSkeleton from "./Details.Skeleton";
 import AlertDialogContainer from "./confirm.Dialog";
-// const IMAGEHEIGHT = 350
+import { TPlaceResponse } from "@/context/DataContext";
+
 const IMAGEWIDTH = '95%'
 const PlacesDetails = () => {
   const [searchParams] = useSearchParams();
-  const [place, setPlaceData] = useState<TPlace | null>(null); // Follow naming convention for state
+  const [place, setPlaceData] = useState<TPlaceResponse | null>(null); 
   const [error, setError] = useState({state:false, message:''});
   const [url, setSrcUrl] = useState<string | null>(null);
   const [imageLoaded, setImageLoaded] = useState(false);
-  // Function to handle image loading
+  
   const handleImageLoad = () => setImageLoaded(true);
-  // Correctly retrieve `itemId` from the URL search params
+ 
   const itemId = searchParams.get('Iv');
 
   useEffect(() => {
     async function getPlaceById() {
       try {
-        const response = await instance.get(`/places/${itemId}`);
+        const response = await instance.get<TPlaceResponse,any>(`/places/${itemId}`);
         setPlaceData(response.data.data);
       } catch (error) {
         if(error instanceof AxiosError){
@@ -35,7 +35,7 @@ const PlacesDetails = () => {
             message: error.response?.data.error
           })
         }
-        // Consider setting an error state here to give feedback to the user
+        
       }
     }
 
@@ -44,7 +44,7 @@ const PlacesDetails = () => {
     } else {
       console.error("No itemId provided in URL search params");
     }
-  }, [itemId]); // Include `itemId` in the dependency array to re-run effect when it changes
+  }, [itemId]);
 
 
   return (
@@ -66,7 +66,7 @@ const PlacesDetails = () => {
      {place && (
        <div className=" grid md:grid-cols-2 px-1 md:px-4 py-2">
        <div className="md:px-2">
-       {!imageLoaded && ( // Show skeleton if image is not loaded
+       {!imageLoaded && ( 
        <div className="h-48 md:h-64 lg:h-80 animate-pulse bg-gray-500 rounded-md"></div>
      )}
          <img className="rounded-md h-48 md:h-64 lg:h-80" style={{
@@ -82,7 +82,7 @@ const PlacesDetails = () => {
    onClick={() => setSrcUrl(imageUrl)}
    className=" cursor-pointer"
    >
-      {!imageLoaded && ( // Show skeleton if image is not loaded
+      {!imageLoaded && (
        <div className="h-10 animate-pulse bg-gray-500 rounded-md"></div>
      )}
      <img

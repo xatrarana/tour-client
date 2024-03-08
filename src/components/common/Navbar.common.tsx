@@ -16,7 +16,6 @@ const Navbar = () => {
     const logout = async () => {
       try {
         const response = await axios.post("/auth/logout");
-        console.log(response.data.success)
         if(response.data.success && response.data.statusCode){
           toast({ variant: 'success', title: response.data.message });
           handleLogout();
@@ -33,8 +32,7 @@ const Navbar = () => {
     
 
   return (
-    <header className="w-full shadow-sm">
-      <div className="navbar h-6 max-w-6xl mx-auto ">
+      <header className="navbar h-6 max-w-6xl mx-auto ">
         <div className="flex-1">
           <button className="btn btn-ghost md:hidden "
           onClick={()=>dispatch({type:"OPEN_NAVBAR"})}
@@ -86,8 +84,7 @@ const Navbar = () => {
             </ul>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
   );
 };
 

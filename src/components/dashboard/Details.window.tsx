@@ -1,6 +1,8 @@
+import { useData } from '@/context/DataContext'
 import {  MapPinned, UsersIcon } from 'lucide-react'
 
 const DetailsWindow = () => {
+  const {placesData, userData} = useData()
   return (
     <>
     <div className='mt-2'>
@@ -14,7 +16,7 @@ const DetailsWindow = () => {
       <div className="flex justify-between border border-gray-400 p-5 rounded-md">
         <div className='flex flex-col gap-5'>
             <span className='text-3xl font-bold'>
-                10
+                {placesData.length}
             </span>
             <span className='text-gray-500'>Total counts</span>
         </div>
@@ -25,7 +27,7 @@ const DetailsWindow = () => {
       <div className="flex justify-between border border-gray-400 p-5 rounded-md">
         <div className='flex flex-col gap-5'>
             <span className='text-3xl font-bold'>
-                5
+                {userData.length}
             </span>
             <span className='text-gray-500'>Total counts</span>
         </div>

@@ -1,3 +1,5 @@
+import instance from '@/lib/axiosConfig';
+
 import { createContext, useContext, useEffect, useReducer } from 'react';
 
 // Define types for authentication state
@@ -31,27 +33,34 @@ const AuthContext = createContext<{
     dispatch: React.Dispatch<AuthAction>;
     handleLogin: (user: User, token:string) => void;
     handleLogout: () => void;
+    checkSession: () => void
 }>({
     state: initialState,
     dispatch: () => null,
     handleLogin: () => {},
-    handleLogout: () => {}
+    handleLogout: () => {},
+    checkSession:  () => {}
 });
 
 function authReducer(state: AuthState, action: AuthAction): AuthState {
+    let newState: AuthState;
     switch (action.type) {
         case 'LOGIN':
-            return {
+            newState = {
                 ...state,
                 isAuthenticated: true,
                 user: action.payload,
             };
+            localStorage.setItem('authState', JSON.stringify(newState));
+            return newState;
         case 'LOGOUT':
-            return {
+            newState = {
                 ...state,
                 isAuthenticated: false,
                 user: null,
             };
+            localStorage.removeItem('authState'); 
+            return newState;
         default:
             return state;
     }
@@ -63,10 +72,8 @@ type AuthProviderProps = {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [state, dispatch] = useReducer(authReducer, initialState, () => {
         try {
-            // Retrieve authentication state from local storage
             const storedAuthState = localStorage.getItem('authState');
             if (storedAuthState) {
-              // Attempt to parse stored state, handling potential errors
               const parsedState = JSON.parse(storedAuthState);
               return parsedState;
             }
@@ -74,22 +81,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             console.error('Error parsing stored auth state:', error);
           }
         
-          // If parsing fails or no state is stored, return initial state
           return initialState;
     });
+   
     useEffect(() => {
+        checkSession()
+    },[state])
+
+    const checkSession = async () => {
         try {
-            localStorage.setItem('authState',JSON.stringify(state))
+            const response = await instance.get('/auth/session',{
+                headers:{
+                    'Content-Type': 'application/json'
+                }
+            })
+            console.log(response.data)        
+           
         } catch (error) {
-            console.error(error)
+            console.log(error)
         }
-    })
+    }
      
     const handleLogin = (user: User, token: string) => {
         try {
 
             dispatch({ type: 'LOGIN', payload: user });
-            localStorage.setItem('user', JSON.stringify(user));
             localStorage.setItem('token', JSON.stringify(token));
           } catch (error) {
             console.error('Error storing data in localStorage:', error);
@@ -103,7 +119,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         localStorage.removeItem('token');
     };
     return (
-        <AuthContext.Provider value={{ state, dispatch, handleLogin, handleLogout }}>
+        <AuthContext.Provider value={{ state, dispatch, handleLogin, handleLogout, checkSession }}>
             {children}
         </AuthContext.Provider>
     );

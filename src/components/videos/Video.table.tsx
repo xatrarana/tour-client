@@ -1,13 +1,5 @@
-import React, { useMemo } from 'react';
-import { ColumnDef, useReactTable, getCoreRowModel, flexRender, getPaginationRowModel } from '@tanstack/react-table';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { useMemo, useState } from 'react';
+import { ColumnDef} from '@tanstack/react-table';
 
 import {
   DropdownMenu,
@@ -18,18 +10,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from '../ui/button';
-import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
+import {  MoreHorizontal } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import CustomTable from '../common/CustomTable';
+import { TVideoResponse, useData } from '@/context/DataContext';
+import { Loading } from '@/page';
 
-export interface Document {
-  _v: number;
-  _id: string;
-  link: string;
-  title: string;
-}
-const VideoTable: React.FC<any> = ({videoData}) => {
-  const data = useMemo(() => videoData, []);
-  const columns: ColumnDef<Document>[] = [
+const VideoTable = () => {
+  const [globalFiltering, setFiltering] = useState('')
+  const {videosData} = useData()
+  const videosDataMemoized = useMemo(() => videosData, [videosData]);
+  const columns: ColumnDef<TVideoResponse>[] = [
     {
       header: 'Title',
       accessorKey: "title"
@@ -75,67 +66,15 @@ const VideoTable: React.FC<any> = ({videoData}) => {
 
   ];
 
- 
-  const table = useReactTable({
-    columns,
-    data,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    
-  });
-
   return (
-    <>
-      <Table className='table-scroll'>
-        <TableHeader>
-
-          {
-            table.getHeaderGroups().map((headergroup) => (
-              <TableRow key={headergroup.id}>
-                {
-                  headergroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      {flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  ))
-                }
-              </TableRow>
-            ))
-          }
-        </TableHeader>
-        <TableBody>
-          {
-            table.getRowModel().rows.map(row => (
-              <TableRow key={row.id}>
-                {
-                  row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))
-                }
-              </TableRow>
-            ))
-          }
-        </TableBody>
-      </Table>
-      <div className='mt-5 mb-3 flex items-center justify-center gap-x-5'>
-        <Button variant={'outline'} onClick={() => table.setPageIndex(0)}>
-          <ChevronLeft />
-          <ChevronLeft />
-        </Button>
-        <Button variant={'outline'} disabled={!table.getCanPreviousPage()} onClick={() => table.previousPage()}>
-          <ChevronLeft />
-        </Button>
-        <Button variant={'outline'} disabled={!table.getCanNextPage()} onClick={() => table.nextPage()}>
-          <ChevronRight />
-        </Button>
-        <Button variant={'outline'} onClick={() => table.setPageIndex(table.getPageCount() - 1)}>
-          <ChevronRight />
-          <ChevronRight />
-        </Button>
-      </div>
-    </>
+   <>
+    {
+      !videosData && <Loading/>
+    }
+    {
+      videosData &&  <CustomTable<TVideoResponse> setFiltering={setFiltering} globalFiltering={globalFiltering} columns={columns} data={videosDataMemoized}/>
+    }
+   </>
   );
 };
 
