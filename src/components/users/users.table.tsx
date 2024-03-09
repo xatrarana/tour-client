@@ -19,8 +19,17 @@ const UsersTableList = () => {
             const user = row.original
             return (
                 <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center dark:text-black text-xl font-semibold py-1.5">
-                  <span>{user?.fullname.split(' ')[0].charAt(0).toUpperCase()}</span>
+                  {user.avatar ? (
+                    <img className='rounded-full' src={user.avatar} alt={user.fullname}/> 
+                  )
+                    :
+                    (
+                      <>
+                      <span>{user?.fullname.split(' ')[0].charAt(0).toUpperCase()}</span>
                   <span>{user?.fullname.split(' ')[1].charAt(0).toUpperCase()}</span>
+                      </>
+                    
+                  )}
                   </div>
             )
           }
@@ -48,7 +57,9 @@ const UsersTableList = () => {
           cell: ({ row }) => {
             const user = row.original
             return (
-                  <AlertDialogContainer path={`/users/delete/ad/${user._id}`} redirect="/users" />
+                 <>
+                 {!user.provider &&  <AlertDialogContainer path={`/users/delete/ad/${user._id}`} redirect="/users" />}
+                 </>
             )
           },
         },

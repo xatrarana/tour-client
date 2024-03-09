@@ -39,7 +39,7 @@ const CustomTable = <T,>({
 
   return (
     <>
-      <Table className='table-scroll'>
+          <Table className='table-scroll'>
         <TableHeader>
           {table.getHeaderGroups().map(headergroup => (
             <TableRow key={headergroup.id}>
@@ -76,9 +76,9 @@ const CustomTable = <T,>({
           <ChevronRight size={15} />
           <ChevronRight size={15} />
         </Button>
-      </div>
-    </>
-  );
+      </div>    
+  </>
+  )
 };
 
 export default CustomTable;

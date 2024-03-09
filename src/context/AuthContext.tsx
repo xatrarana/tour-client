@@ -8,9 +8,15 @@ export interface AuthState {
     user: User | null;
 }
 
-type AuthAction = { type: 'LOGIN'; payload: User } | { type: 'LOGOUT' };
+export type TSession = {
+    isAuthenticated: boolean,
+    sessionId: string,
+    user: User
+  }
 
-const initialState: AuthState = {
+type AuthAction = { type: 'LOGIN'; payload: User } | { type: 'LOGOUT' } | {type: 'UPDATE'; session: TSession};
+
+export const initialState: AuthState = {
     isAuthenticated: false,
     user: null,
 };
@@ -60,6 +66,17 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
                 user: null,
             };
             localStorage.removeItem('authState'); 
+            localStorage.removeItem('user'); 
+            localStorage.removeItem('token'); 
+            return newState;
+
+        case 'UPDATE':
+            newState = {
+                ...state,
+                isAuthenticated: action.session.isAuthenticated,
+                user: action.session.user,
+            };
+            localStorage.setItem('authState', JSON.stringify(newState));
             return newState;
         default:
             return state;
@@ -86,17 +103,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
    
     useEffect(() => {
         checkSession()
-    },[state])
+    },[state.isAuthenticated])
 
     const checkSession = async () => {
         try {
-            const response = await instance.get('/auth/session',{
+            const response = await instance.get<TSession>('/auth/session',{
                 headers:{
                     'Content-Type': 'application/json'
                 }
             })
-            console.log(response.data)        
            
+            if(response.status === 200){
+                dispatch({type:"UPDATE", session: response.data})
+            }
         } catch (error) {
             console.log(error)
         }
@@ -115,8 +134,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Remove user data from local storage after logout
     const handleLogout = () => {
         dispatch({ type: 'LOGOUT' });
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
     };
     return (
         <AuthContext.Provider value={{ state, dispatch, handleLogin, handleLogout, checkSession }}>

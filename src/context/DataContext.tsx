@@ -30,6 +30,8 @@ export type TPlaceResponse = {
     role: string,
     createdAt: string,
     updatedAt: string,
+    avatar?: string,
+    provider?: string,
     __v: number,
     fullname: string,
   }
@@ -96,7 +98,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
   // Fetch videos data
   const fetchVideosData = async () => {
-    console.log(" i have been caclled")
     try {
       const response = await instance.get('/videos',{
         headers: HEADER_CONFIG
@@ -108,9 +109,15 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchUserData();
-    fetchPlacesData();
-    fetchVideosData();
+    (async function(){
+      const str =  localStorage.getItem('authState')
+    const state = JSON.parse(str!)
+    if(state.isAuthenticated){
+      fetchUserData();
+      fetchPlacesData();
+      fetchVideosData();
+    }
+    })()
   }, []);
 
   return (

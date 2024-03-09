@@ -1,8 +1,21 @@
 import { cn } from "@/lib/utils"
 import {  Calendar,  LucideHome, MapPinned, UsersIcon, VideoIcon, X } from "lucide-react"
-import { Link } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 import { Button } from "../ui/button"
 import { useNavbar } from "@/context/ResponsiveNabBar"
+
+const isActiveConfig = ({isActive}: any) =>
+[
+    isActive ? 'dark:bg-stone-50 bg-gray-800 text-white dark:text-black font-bold rounded-md' : ''
+].join(' ')
+
+const navLinks = [
+    { path: '/', icon: <LucideHome size={30} />, name: 'Home' },
+    { path: '/places', icon: <MapPinned size={30} />, name: 'Places' },
+    { path: '/users', icon: <UsersIcon size={30} />, name: 'Users' },
+    { path: '/events', icon: <Calendar size={30} />, name: 'Events' },
+    { path: '/videos', icon: <VideoIcon size={30} />, name: 'Videos' },
+  ];
 
 const MobileDrawer = () => {
     const {dispatch} = useNavbar()
@@ -15,37 +28,15 @@ const MobileDrawer = () => {
             </div>
 
              {/* actions buttons */}
-             <div className="w-full  mt-10 flex flex-col  gap-y-8">
-                <Link to={'/'} onClick={()=>dispatch({type:"CLOSE_NAVBAR"})}  >
-                    <div className={cn("flex items-center justify-center gap-x-10 h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-xlite  dark:hover:text-xlack")}>
-                    <LucideHome size={30}  /> 
-                    <h1 className="ml-3 text-xl font-meditightacking-wider">Home</h1>
-                    </div>
-                </Link>
-                <Link to={'/places'} onClick={()=>dispatch({type:"CLOSE_NAVBAR"})}  >
-                    <div className={cn("flex items-center justify-center gap-x-10 h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-xlite dark:hover:text-xlack")}>
-                    <MapPinned size={30}  /> 
-                    <h1 className="ml-3 text-xl tracking-tight">Places</h1>
-                    </div>
-                </Link>
-                <Link to={'/users'} onClick={()=>dispatch({type:"CLOSE_NAVBAR"})} >
-                    <div className={cn("flex items-center justify-center gap-x-10 h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-xlite dark:hover:text-xlack")}>
-                    <UsersIcon size={30}  /> 
-                    <h1 className="ml-3 text-xl tracking-tight">Users</h1>
-                    </div>
-                </Link>
-                <Link to={'/events'} onClick={()=>dispatch({type:"CLOSE_NAVBAR"})} >
-                    <div className={cn("flex items-center justify-center gap-x-10 h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-xlite dark:hover:text-xlack")}>
-                    <Calendar size={30}  /> 
-                    <h1 className="ml-3 text-xl tracking-tight">Events</h1>
-                    </div>
-                </Link>
-                <Link to={'/videos'} onClick={()=>dispatch({type:"CLOSE_NAVBAR"})} >
-                    <div className={cn("flex items-center justify-center gap-x-10 h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-xlite dark:hover:text-xlack")}>
-                    <VideoIcon size={30}  /> 
-                    <h1 className="ml-3 text-xl tracking-tight">Videos</h1>
-                    </div>
-                </Link>
+             <div className="w-full  mt-10 flex flex-col  gap-y-8 px-2">
+                {navLinks.map((link, index) => (
+          <NavLink className={isActiveConfig} to={link.path} key={index} onClick={() => dispatch({ type: 'CLOSE_NAVBAR' })}>
+            <div className={cn("flex items-center justify-center gap-x-10 h-12 rounded-md hover:bg-gray-800 dark:hover:bg-stone-50 hover:text-xlite dark:hover:text-xlack")}>
+              {link.icon}
+              <h1 className="ml-3 text-xl font-meditightacking-wider">{link.name}</h1>
+            </div>
+          </NavLink>
+        ))}
              </div>
             
    </div>
